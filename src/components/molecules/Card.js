@@ -11,11 +11,11 @@ const Card = ({avatar, firstName, lastName, email, gender, status}) => {
 
       {/* Content */}
       <View>
-        <Text style={styles.text}>
+        <Text style={styles.text(false)}>
           {firstName} {lastName}
         </Text>
-        <Text style={styles.text}>{gender}</Text>
-        <Text style={styles.text}>{email}</Text>
+        <Text style={styles.text(false)}>{gender}</Text>
+        <Text style={styles.text(true)}>{email}</Text>
       </View>
 
       {/* Icon */}
@@ -51,11 +51,12 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     marginRight: 10,
   },
-  text: {
+  text: isEmail => ({
     fontSize: 14,
     fontWeight: '600',
     color: colors.text.black,
-  },
+    textTransform: isEmail ? 'none' : 'capitalize',
+  }),
   iconPosition: {
     position: 'absolute',
     top: 5,

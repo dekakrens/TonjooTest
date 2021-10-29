@@ -1,10 +1,34 @@
-import React from 'react';
+import axios from 'axios';
+import React, {useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {ILLogo} from '../assets';
 import {Button, Gap, Input} from '../components';
-import {colors} from '../utils';
+import {API_HOST} from '../config/API_HOST';
+import {colors, storeData} from '../utils';
 
 const Login = ({navigation}) => {
+  const [form, setForm] = useState({
+    username: '',
+    password: '',
+  });
+
+  // Login function
+  const onContinue = () => {
+    axios
+      .post(`${API_HOST.url}authenticate`, form)
+      .then(res => {
+        if (res) {
+          storeData('TOKEN', res.data.token);
+          navigation.replace('Menu');
+        }
+      })
+      .catch(e => {
+        if (e) {
+          // Do nothing
+        }
+      });
+  };
+
   return (
     <View style={styles.container}>
       <Image source={ILLogo} style={styles.image} />
@@ -13,14 +37,26 @@ const Login = ({navigation}) => {
       {/* Input Form */}
       <View style={styles.formContainer}>
         <View style={styles.inputForm}>
-          <Input type="login" title="Username" keyboardType="email-address" />
+          <Input
+            type="login"
+            title="Username"
+            value={form.username}
+            onChangeText={value => setForm({...form, username: value})}
+            keyboardType="email-address"
+          />
           <Gap height={15} />
-          <Input type="login" title="Password" isSecure />
+          <Input
+            type="login"
+            title="Password"
+            value={form.password}
+            onChangeText={value => setForm({...form, password: value})}
+            isSecure
+          />
           <Gap height={30} />
         </View>
 
         {/* Button */}
-        <Button title="Login" onPress={() => navigation.replace('Menu')} />
+        <Button title="Login" onPress={() => onContinue()} />
       </View>
     </View>
   );

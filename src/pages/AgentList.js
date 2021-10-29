@@ -1,70 +1,44 @@
-import React from 'react';
+import axios from 'axios';
+import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {Card, Header} from '../components';
-import {colors} from '../utils';
+import {API_HOST} from '../config/API_HOST';
+import {colors, getData} from '../utils';
 
 const AgentList = ({navigation}) => {
+  const [list, setList] = useState([]);
+
+  useEffect(() => {
+    getData('TOKEN').then(res => {
+      axios
+        .get(`${API_HOST.url}contacts?token=${res}`)
+        .then(res => setList(res.data.data))
+        .catch(e => {
+          if (e) {
+            // Do nothing
+          }
+        });
+    });
+  }, []);
+
   return (
     <>
       <Header title="Agent List" onPress={() => navigation.goBack()} />
       <View style={styles.container}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Card
-            firstName="Deny"
-            lastName="Kurniawan"
-            email="dekakrens@gmail.com"
-            gender="Male"
-            status="local"
-          />
-          <Card
-            firstName="Deny"
-            lastName="Kurniawan"
-            email="dekakrens@gmail.com"
-            gender="Male"
-            status="cloud"
-          />
-          <Card
-            firstName="Deny"
-            lastName="Kurniawan"
-            email="dekakrens@gmail.com"
-            gender="Male"
-            status="local"
-          />
-          <Card
-            firstName="Deny"
-            lastName="Kurniawan"
-            email="dekakrens@gmail.com"
-            gender="Male"
-            status="cloud"
-          />
-          <Card
-            firstName="Deny"
-            lastName="Kurniawan"
-            email="dekakrens@gmail.com"
-            gender="Male"
-            status="local"
-          />
-          <Card
-            firstName="Deny"
-            lastName="Kurniawan"
-            email="dekakrens@gmail.com"
-            gender="Male"
-            status="cloud"
-          />
-          <Card
-            firstName="Deny"
-            lastName="Kurniawan"
-            email="dekakrens@gmail.com"
-            gender="Male"
-            status="local"
-          />
-          <Card
-            firstName="Deny"
-            lastName="Kurniawan"
-            email="dekakrens@gmail.com"
-            gender="Male"
-            status="cloud"
-          />
+          {list.map((item, key) => {
+            return (
+              <Card
+                key={key}
+                firstName={item.first_name}
+                lastName={item.last_name}
+                email={item.email}
+                gender={item.gender}
+                avatar={{uri: item.avatar}}
+                status={item?.status}
+              />
+            );
+          })}
         </ScrollView>
       </View>
     </>
