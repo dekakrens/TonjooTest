@@ -12,7 +12,7 @@ const Picker = ({item, onChangeValue, title}) => {
   return (
     <View style={styles.row}>
       <Text style={styles.text}>{title}</Text>
-      <Gap width={width - 50 - 0.75 * width} />
+      <Gap width={width - 60 - 0.75 * width} />
       <DropDownPicker
         open={openPicker}
         value={val}
@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: colors.text.black,
+    width: 50,
   },
   row: {
     flexDirection: 'row',

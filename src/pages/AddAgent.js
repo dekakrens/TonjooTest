@@ -6,12 +6,11 @@ import {AddPhoto, Button, Gap, Header, Input, Picker} from '../components';
 import {colors} from '../utils';
 import {launchCamera} from 'react-native-image-picker';
 
+const gender = [
+  {label: 'Male', value: 'Male'},
+  {label: 'Felame', value: 'Female'},
+];
 const AddAgent = ({navigation}) => {
-  const gender = [
-    {label: 'Male', value: 'Male'},
-    {label: 'Felame', value: 'Female'},
-  ];
-
   const [form, setForm] = useState({
     first_name: '',
     last_name: '',
@@ -68,6 +67,7 @@ const AddAgent = ({navigation}) => {
         messageNotSuccess();
       }
     });
+    console.log(form);
   };
 
   return (
