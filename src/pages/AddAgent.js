@@ -1,8 +1,13 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {AddPhoto, Button, Gap, Header, Input} from '../components';
+import {AddPhoto, Button, Gap, Header, Input, Picker} from '../components';
+import {colors} from '../utils';
 
 const AddAgent = ({navigation}) => {
+  const gender = [
+    {label: 'Male', value: 'male'},
+    {label: 'Felame', value: 'female'},
+  ];
   return (
     <>
       <Header title="Add Agent" onPress={() => navigation.goBack()} />
@@ -12,7 +17,7 @@ const AddAgent = ({navigation}) => {
         <Gap height={15} />
         <Input title="Last Name" />
         <Gap height={15} />
-        <Input title="Gender" />
+        <Picker title="Gender" item={gender} />
         <Gap height={15} />
         <Input title="Email" keyboardType="email-address" />
         <Gap height={15} />
@@ -30,7 +35,9 @@ export default AddAgent;
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     padding: 20,
+    backgroundColor: colors.background,
   },
   row: {
     marginTop: 50,

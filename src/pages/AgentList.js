@@ -8,7 +8,7 @@ const AgentList = ({navigation}) => {
     <>
       <Header title="Agent List" onPress={() => navigation.goBack()} />
       <View style={styles.container}>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Card
             firstName="Deny"
             lastName="Kurniawan"
