@@ -12,7 +12,7 @@ const Picker = ({item, onChangeValue, title}) => {
   return (
     <View style={styles.row}>
       <Text style={styles.text}>{title}</Text>
-      <Gap width={width - 40 - 0.75 * width - 16} />
+      <Gap width={width - 50 - 0.75 * width} />
       <DropDownPicker
         open={openPicker}
         value={val}
