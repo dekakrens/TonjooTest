@@ -1,15 +1,19 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {colors} from '../../utils';
 
-const AddPhoto = ({onPress}) => {
+const AddPhoto = ({onPress, src}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Photo</Text>
-      <TouchableOpacity style={styles.photo} onPress={onPress}>
-        <Icon name="camera" size={50} color={colors.button.black} />
-      </TouchableOpacity>
+      {src ? (
+        <Image style={styles.photo} source={{uri: src}} />
+      ) : (
+        <TouchableOpacity style={styles.photo} onPress={onPress}>
+          <Icon name="camera" size={50} color={colors.button.black} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

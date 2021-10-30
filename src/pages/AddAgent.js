@@ -1,9 +1,9 @@
 import NetInfo from '@react-native-community/netinfo';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {showMessage} from 'react-native-flash-message';
 import {AddPhoto, Button, Gap, Header, Input, Picker} from '../components';
-import {colors} from '../utils';
+import {colors, getData, storeData} from '../utils';
 import {launchCamera} from 'react-native-image-picker';
 
 const gender = [
@@ -17,22 +17,63 @@ const AddAgent = ({navigation}) => {
     gender: '',
     email: '',
     avatar: '',
+    status: 'local',
   });
 
+  const [agents, setAgents] = useState([]);
+
   // Message success
-  const messageSuccess = () => {
-    showMessage({
-      message: 'Berhasil menyimpan data ke Firebase',
-      type: 'success',
-    });
+  const saveToCloud = () => {
+    if (
+      form.first_name &&
+      form.last_name &&
+      form.gender &&
+      form.avatar &&
+      form.email
+    ) {
+      showMessage({
+        message: 'Berhasil menyimpan data ke Firebase',
+        type: 'success',
+      });
+    } else {
+      showMessage({
+        message: 'Tidak ada data yang ditambahkan',
+        type: 'danger',
+      });
+    }
+    setForm({first_name: '', last_name: '', gender: '', email: '', avatar: ''});
   };
 
-  // Message not success
-  const messageNotSuccess = () => {
-    showMessage({
-      message: 'Jaringan tidak stabil. Menyimpan ke draft',
-      type: 'warning',
-    });
+  // Save to local storage
+  const saveToLocal = fromButton => {
+    if (
+      form.first_name &&
+      form.last_name &&
+      form.gender &&
+      form.avatar &&
+      form.email
+    ) {
+      agents.push(form);
+      setAgents(agents);
+      storeData('AGENTS', agents);
+      if (fromButton) {
+        showMessage({
+          message: 'Berhasil menyimpan ke draft',
+          type: 'success',
+        });
+      } else {
+        showMessage({
+          message: 'Jaringan tidak stabil. Menyimpan ke draft',
+          type: 'warning',
+        });
+      }
+    } else {
+      showMessage({
+        message: 'Tidak ada data yang ditambahkan',
+        type: 'danger',
+      });
+    }
+    setForm({first_name: '', last_name: '', gender: '', email: '', avatar: ''});
   };
 
   // Add Photo
@@ -40,35 +81,41 @@ const AddAgent = ({navigation}) => {
     launchCamera(
       {
         mediaType: 'photo',
-        maxWidth: 100,
-        maxHeight: 100,
+        maxHeight: 300,
+        maxWidth: 300,
         cameraType: 'front',
         includeBase64: true,
       },
-      value => setForm({...form, avatar: value.assets[0].base64}),
+      value =>
+        setForm({
+          ...form,
+          avatar: `data:image/png;base64,${value.assets[0].base64}`,
+        }),
     );
   };
-
-  // To save an agent to draft
-  const onSave = () => {};
 
   // To save an agent to cloud
   const onSubmit = () => {
     NetInfo.fetch().then(state => {
       if (state.type == 'cellular') {
         if (state.details.cellularGeneration == '2g') {
-          messageNotSuccess();
+          saveToLocal(false);
         } else {
-          messageSuccess();
+          saveToCloud();
         }
       } else if (state.isConnected) {
-        messageSuccess();
+        saveToCloud();
       } else {
-        messageNotSuccess();
+        saveToLocal(false);
       }
     });
-    console.log(form);
   };
+
+  useEffect(() => {
+    getData('AGENTS').then(res => {
+      if (res) setAgents(res);
+    });
+  }, []);
 
   return (
     <>
@@ -100,9 +147,9 @@ const AddAgent = ({navigation}) => {
           onChangeText={value => setForm({...form, email: value})}
         />
         <Gap height={15} />
-        <AddPhoto onPress={() => Photo()} />
+        <AddPhoto src={form.avatar} onPress={() => Photo()} />
         <View style={styles.row}>
-          <Button title="Save as Draft" onPress={() => onSave()} />
+          <Button title="Save as Draft" onPress={() => saveToLocal(true)} />
           <Button title="Submit" onPress={() => onSubmit()} />
         </View>
       </View>

@@ -7,7 +7,7 @@ const Card = ({avatar, firstName, lastName, email, gender, status}) => {
   return (
     <View style={styles.row}>
       {/* Avatar */}
-      <Image source={avatar} style={styles.image} />
+      <Image source={{uri: avatar}} style={styles.image} />
 
       {/* Content */}
       <View>

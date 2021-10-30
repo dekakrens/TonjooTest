@@ -17,6 +17,7 @@ const Router = () => {
         component={AgentList}
         options={{headerShown: false}}
       />
+
       <Stack.Screen
         name="Login"
         component={Login}
